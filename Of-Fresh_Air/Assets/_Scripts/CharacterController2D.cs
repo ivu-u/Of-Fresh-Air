@@ -60,7 +60,6 @@ public class CharacterController2D : MonoBehaviour
     // TODO: seperate grounded checks   | currently grounded == surface with an angle
     //          with less than 90 degrees with respect to world up
     private void HandleCollisions() {
-        _isGrounded = false;
         Collider2D[] hits = Physics2D.OverlapBoxAll(_t.position, _collider.size, 0);
 
         foreach (Collider2D hit in hits) {
@@ -72,8 +71,9 @@ public class CharacterController2D : MonoBehaviour
                 _t.Translate(colliderDistance.pointA - colliderDistance.pointB);
             }
 
+            /// GROUNDED CHECK HERE ---
             if (Vector2.Angle(colliderDistance.normal, Vector2.up) < 90 && _velocity.y < 0) {
-                _isGrounded = true;
+                SetGrounded(true);
             }
         }
     }
@@ -84,6 +84,9 @@ public class CharacterController2D : MonoBehaviour
 
             if (Input.GetButtonDown("Jump")) {
                 _velocity.y = _jumpVelocity;
+
+                // TEST
+                SetGrounded(false);
             }
         }
     }
@@ -93,4 +96,6 @@ public class CharacterController2D : MonoBehaviour
             _velocity.y -= _gravity * Time.deltaTime;
         }
     }
+
+    private void SetGrounded(bool isGrounded) {  _isGrounded = isGrounded; }
 }
